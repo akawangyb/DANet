@@ -1,7 +1,7 @@
 dataset: 'year'
 task: 'regression'
-resume_dir: ''
-logname: 'test.log'
+resume_dir: './checkpoint/checkpoint.pth'
+logname: 'year.log'
 
 fit:
   max_epochs: 150
