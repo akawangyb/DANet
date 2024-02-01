@@ -17,7 +17,7 @@ def get_args():
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_id
     dataset = args.dataset
     model_file = args.model_file
-    task = 'regression' if dataset in ['year', 'yahoo', 'MSLR'] else 'classification'
+    task = 'regression' if dataset in ['year', 'yahoo', 'MSLR', 'containerif'] else 'classification'
 
     return dataset, model_file, task, len(args.gpu_id)
 
@@ -52,7 +52,9 @@ def prepare_data(task, y_train, y_valid, y_test):
 if __name__ == '__main__':
     dataset, model_file, task, n_gpu = get_args()
     print('===> Getting data ...')
+    # print('===>bug1')
     X_train, y_train, X_valid, y_valid, X_test, y_test = get_data(dataset)
+    # print('===>bug2')
     output_dim, std, y_train, y_valid, y_test = prepare_data(task, y_train, y_valid, y_test)
     clf, metric = set_task_model(task)
 

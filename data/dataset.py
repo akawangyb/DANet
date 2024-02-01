@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from category_encoders import LeaveOneOutEncoder
+# from category_encoders import LeaveOneOutEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import QuantileTransformer
 
@@ -119,7 +119,7 @@ def yahoo():
 
 
 def yearpred():
-    target = 0
+    target = '0'
     # data = pd.read_pickle('./data/yearpred/YearPrediction.pkl')
     #
     # train_idx = pd.read_csv('./data/yearpred/train_idx.csv')['0'].values
@@ -132,9 +132,15 @@ def yearpred():
     train = pd.read_csv('./data/yearpred/train.csv')
     valid = pd.read_csv('./data/yearpred/valid.csv')
     test = pd.read_csv('./data/yearpred/test.csv')
-
+    # train = pd.read_csv('./yearpred/train.csv')
+    # valid = pd.read_csv('./yearpred/valid.csv')
+    # test = pd.read_csv('./yearpred/test.csv')
+    # print('===>bug3')
+    # print(train.columns)
     y_train = train[target].values
+    # print('===>bug4')
     X_train = train.drop([target], axis=1).values
+    # print('===>bug5')
     y_valid = valid[target].values
     X_valid = valid.drop([target], axis=1).values
     y_test = test[target].values
@@ -224,7 +230,7 @@ def cardio():
 
 def containerif():
     # 直接读取训练，验证，测试，3个数据集。然后进行
-    target = 0
+    target = "avg_lat"
     train = pd.read_csv('./data/containerif/train.csv')
     valid = pd.read_csv('./data/containerif/valid.csv')
     test = pd.read_csv('./data/containerif/test.csv')
@@ -237,6 +243,8 @@ def containerif():
     X_test = test.drop([target], axis=1).values
 
     X_train, X_valid, X_test = quantile_transform(X_train, X_valid, X_test)
+    # print(X_train.Head())
+    # print(y_test)
     return X_train, y_train, X_valid, y_valid, X_test, y_test
 
 def get_data(datasetname):
@@ -255,8 +263,10 @@ def get_data(datasetname):
     elif datasetname == 'click':
         return click()
     elif datasetname == 'containerif':
-        return contanerif()
+        return containerif()
 
 
 if __name__ == '__main__':
-    forest_cover()
+    # forest_cover()
+    # containerif()
+    yearpred()
