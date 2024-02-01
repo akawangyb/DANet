@@ -222,6 +222,23 @@ def cardio():
     return X_train, y_train, X_valid, y_valid, X_test, y_test
 
 
+def containerif():
+    # 直接读取训练，验证，测试，3个数据集。然后进行
+    target = 0
+    train = pd.read_csv('./data/containerif/train.csv')
+    valid = pd.read_csv('./data/containerif/valid.csv')
+    test = pd.read_csv('./data/containerif/test.csv')
+
+    y_train = train[target].values
+    X_train = train.drop([target], axis=1).values
+    y_valid = valid[target].values
+    X_valid = valid.drop([target], axis=1).values
+    y_test = test[target].values
+    X_test = test.drop([target], axis=1).values
+
+    X_train, X_valid, X_test = quantile_transform(X_train, X_valid, X_test)
+    return X_train, y_train, X_valid, y_valid, X_test, y_test
+
 def get_data(datasetname):
     if datasetname == 'forest':
         return forest_cover()
@@ -237,6 +254,8 @@ def get_data(datasetname):
         return epsilon()
     elif datasetname == 'click':
         return click()
+    elif datasetname == 'containerif':
+        return contanerif()
 
 
 if __name__ == '__main__':
