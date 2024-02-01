@@ -1,7 +1,7 @@
 dataset: 'year'
 task: 'regression'
 resume_dir: ''
-logname: ''
+logname: 'test.log'
 
 fit:
   max_epochs: 150
