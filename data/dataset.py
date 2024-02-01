@@ -1,8 +1,9 @@
-import pandas as pd
 import numpy as np
-from sklearn.preprocessing import QuantileTransformer
-from sklearn.model_selection import train_test_split
+import pandas as pd
 from category_encoders import LeaveOneOutEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import QuantileTransformer
+
 
 def remove_unused_column(data):
     unused_list = []
@@ -13,10 +14,12 @@ def remove_unused_column(data):
     data.drop(columns=unused_list, inplace=True)
     return data
 
+
 def split_data(data, target, test_size):
     label = data[target]
     data = data.drop([target], axis=1)
-    X_train, X_test, y_train, y_test = train_test_split(data, label, test_size=test_size, random_state=123, shuffle=True)
+    X_train, X_test, y_train, y_test = train_test_split(data, label, test_size=test_size, random_state=123,
+                                                        shuffle=True)
     return X_train, y_train.values, X_test, y_test.values
 
 
@@ -28,6 +31,7 @@ def quantile_transform(X_train, X_valid, X_test):
     X_test = qt.transform(X_test)
 
     return X_train, X_valid, X_test
+
 
 def forest_cover():
     target = "Covertype"
@@ -50,7 +54,7 @@ def forest_cover():
         "Vertical_Distance_To_Hydrology", "Horizontal_Distance_To_Roadways",
         "Hillshade_9am", "Hillshade_Noon", "Hillshade_3pm",
         "Horizontal_Distance_To_Fire_Points"
-        ]
+    ]
     feature = int_columns + bool_columns + [target]
     data = pd.read_csv('./data/forest_cover_type/forest-cover-type.csv', header=None, names=feature)
     train_idx = pd.read_csv('./data/forest_cover_type/train_idx.csv', header=None)[0].values
@@ -59,7 +63,6 @@ def forest_cover():
     valid = data.iloc[valid_idx, :]
     test_idx = pd.read_csv('./data/forest_cover_type/test_idx.csv', header=None)[0].values
     test = data.iloc[test_idx, :]
-
 
     y_train = train[target].values
     X_train = train.drop([target], axis=1).values
@@ -75,6 +78,7 @@ def forest_cover():
     X_test = (X_test - mean) / std
 
     return X_train, y_train, X_valid, y_valid, X_test, y_test
+
 
 def MSLR():
     target = 0
@@ -92,6 +96,7 @@ def MSLR():
     X_train, X_valid, X_test = quantile_transform(train, valid, test)
 
     return X_train, y_train, X_valid, y_valid, X_test, y_test
+
 
 def yahoo():
     target = 0
@@ -112,16 +117,21 @@ def yahoo():
     X_train, X_valid, X_test = quantile_transform(train, valid, test)
     return X_train, y_train, X_valid, y_valid, X_test, y_test
 
+
 def yearpred():
     target = 0
-    data = pd.read_pickle('./data/yearpred/YearPrediction.pkl')
+    # data = pd.read_pickle('./data/yearpred/YearPrediction.pkl')
+    #
+    # train_idx = pd.read_csv('./data/yearpred/train_idx.csv')['0'].values
+    # train = data.iloc[train_idx, :]
+    # valid_idx = pd.read_csv('./data/yearpred/valid_idx.csv')['0'].values
+    # valid = data.iloc[valid_idx, :]
+    # test_idx = pd.read_csv('./data/yearpred/test_idx.csv')['0'].values
+    # test = data.iloc[test_idx, :]
 
-    train_idx = pd.read_csv('./data/yearpred/train_idx.csv')['0'].values
-    train = data.iloc[train_idx, :]
-    valid_idx = pd.read_csv('./data/yearpred/valid_idx.csv')['0'].values
-    valid = data.iloc[valid_idx, :]
-    test_idx = pd.read_csv('./data/yearpred/test_idx.csv')['0'].values
-    test = data.iloc[test_idx, :]
+    train = pd.read_csv('./data/yearpred/train.csv')
+    valid = pd.read_csv('./data/yearpred/valid.csv')
+    test = pd.read_csv('./data/yearpred/test.csv')
 
     y_train = train[target].values
     X_train = train.drop([target], axis=1).values
@@ -132,6 +142,7 @@ def yearpred():
 
     X_train, X_valid, X_test = quantile_transform(X_train, X_valid, X_test)
     return X_train, y_train, X_valid, y_valid, X_test, y_test
+
 
 def epsilon():
     target = 0
@@ -150,7 +161,6 @@ def epsilon():
     X_valid = valid.drop([target], axis=1).values
     X_test = test.drop([target], axis=1).values
 
-
     mean = np.mean(X_train, axis=0)
     std = np.std(X_train, axis=0)
     X_train = (X_train - mean) / std
@@ -158,6 +168,7 @@ def epsilon():
     X_test = (X_test - mean) / std
 
     return X_train, y_train, X_valid, y_valid, X_test, y_test
+
 
 def click():
     target = 'target'
@@ -185,8 +196,10 @@ def click():
     X_valid[cat_features] = cat_encoder.transform(X_valid[cat_features])
     X_test[cat_features] = cat_encoder.transform(X_test[cat_features])
 
-    X_train, X_valid, X_test = quantile_transform(X_train.astype(np.float32), X_valid.astype(np.float32), X_test.astype(np.float32))
+    X_train, X_valid, X_test = quantile_transform(X_train.astype(np.float32), X_valid.astype(np.float32),
+                                                  X_test.astype(np.float32))
     return X_train, y_train, X_valid, y_valid, X_test, y_test
+
 
 def cardio():
     target = 'cardio'
@@ -224,6 +237,7 @@ def get_data(datasetname):
         return epsilon()
     elif datasetname == 'click':
         return click()
+
 
 if __name__ == '__main__':
     forest_cover()
